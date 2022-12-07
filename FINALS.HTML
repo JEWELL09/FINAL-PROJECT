@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <title>Document</title>
+ 
+</head>
+<body>
+
+    <div class="container">
+        <form>
+            <div class="form-group">
+                <h2>Method</h2>
+                <div class="input-group">
+                    <input type="radio" name="choice1" id="radio-get">GET<br>
+                    <input type="radio" name="choice1" id="radio-post">POST<br>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <h2>First Word</h2>
+                <div class="input-group">
+                    <input type="radio" name="choice2" id="radio-the" value="The">THE<br>
+                    <input type="radio" name="choice2" id="radio-happy" value="Happy">HAPPY<br>
+                    <input type="radio" name="choice2" id="radio-sad" value="Sad">SAD<br>
+                    <input type="radio" name="choice2" id="radio-lazy" value="Lazy">LAZY<br>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h2>Second Word</h2>
+                <div class="input-group">
+                    <input type="radio" name="choice3" id="radio-cat" value="Cat">CAT<br>
+                    <input type="radio" name="choice3" id="radio-dog" value="Dog">DOG<br>
+                    <input type="radio" name="choice3" id="radio-fox" value="Fox">FOX<br>
+                    <input type="radio" name="choice3" id="radio-bear" value="Bear">BEAR<br>
+                </div>
+            </div>
+
+            <input type="button" value="Perform Operation" onclick="checkMethod()" class="button">
+          </form>
+          <div>
+          </div>
+
+          <div>
+            <h2 id="output-title">Output</h2>
+            <span id="method"></span>
+          </div>
+
+          <div class="result-cont">
+            <h1 id="result"></h1>
+          </div>
+          
+    </div>
+
+
+
+</body>
+
+<script>
+async function GetMethod(){
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts/22")
+    if (!response.ok){
+        throw new Error("warning! " + response.statusText)
+    }
+    const file = await response.json()
+    console.log("Title: " + file.title)
+    document.getElementById("result").innerHTML = "Title: " + file.title
+    document.getElementById('method').innerHTML = "Get Method";
+}
+
+function postResults(result) {
+    var outputTitle = result.title;
+    document.getElementById("result").innerHTML = "Title: " + outputTitle;
+    document.getElementById('method').innerHTML = "Post Method"
+}
+
+async function PostMethod(){
+
+    var input_radios = document.getElementsByName("choice2");
+    for (var input of input_radios){
+        if (input.checked){
+            var first_id = input.id
+            var first_word = document.getElementById(first_id).value;
+        }
+    }
+
+    var input_radios = document.getElementsByName("choice3");
+    for (var input of input_radios){
+        if (input.checked){
+            var second_id = input.id
+            var second_word = document.getElementById(second_id).value;
+        }
+    }
+
+    await fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        body: JSON.stringify({
+            title: `${first_word} ${second_word}`,
+        }),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    })
+    .then((response) => response.json())
+    .then((json) => postResults(json));
+}
+
+function checkMethod(){
+    if (document.getElementById("radio-get").checked){
+        GetMethod()
+    }
+
+    if (document.getElementById("radio-post").checked){
+        PostMethod()
+    }
+}
+
+</script>
+
+</html>
+</body>
+</html>
